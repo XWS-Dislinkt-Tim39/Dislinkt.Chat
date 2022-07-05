@@ -60,6 +60,15 @@ namespace Public_Chat.Controllers
             await _messageRepository.CreateChatAsync(chat);
 
         }
+
+
+        [HttpPost]
+        [Route("/delete-chat")]
+        public async Task DeleteChat([FromBody] MessageData chat)
+        {
+            await _messageRepository.DeleteChat(chat.From,chat.To);
+
+        }
         [HttpPost]
         [Route("/add-new-message")]
         public async Task<bool> AddNewInterest(NewMessageData newMessage)

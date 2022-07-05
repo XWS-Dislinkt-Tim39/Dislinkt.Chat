@@ -10,6 +10,7 @@ namespace Public_Chat.Interfaces.Repositories
         Task CreateChatAsync(MessageData chat);
 
         Task AddMessage(Message chat);
+        Task DeleteChat(Guid from, Guid to);
         Task<Message> GetBySenderAndReciever(Guid from, Guid to);
         Task<Message> GetById(Guid id);
     }
