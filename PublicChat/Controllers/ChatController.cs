@@ -60,6 +60,15 @@ namespace Public_Chat.Controllers
             await _messageRepository.CreateChatAsync(chat);
 
         }
+
+
+        [HttpPost]
+        [Route("/delete-chat")]
+        public async Task DeleteChat([FromBody] MessageData chat)
+        {
+            await _messageRepository.DeleteChat(chat.From,chat.To);
+
+        }
         [HttpPost]
         [Route("/add-new-message")]
         public async Task<bool> AddNewInterest(NewMessageData newMessage)
@@ -68,7 +77,7 @@ namespace Public_Chat.Controllers
 
             if (existingChat == null) return false;
 
-            var updatedMessages = existingChat.Messages.Append(new Domain.MessageInfo(Guid.NewGuid(),newMessage.Sender,newMessage.Text)).ToArray();
+            var updatedMessages = existingChat.Messages.Append(new Domain.MessageInfo(Guid.NewGuid(),newMessage.Sender,newMessage.Text,newMessage.Time)).ToArray();
 
             await _messageRepository.AddMessage(new Message(existingChat.Id, existingChat.From,existingChat.To, updatedMessages));
 

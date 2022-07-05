@@ -7,6 +7,7 @@ namespace Public_Chat.Data
         public Guid ChatId { get; set; }
         public Guid Sender { get; set; }
 
+        public DateTime Time { get; set; }
         public string Text { get; set; }
     }
 }

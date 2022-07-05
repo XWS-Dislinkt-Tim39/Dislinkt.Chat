@@ -11,11 +11,11 @@ namespace Public_Chat.Domain
         public Guid To { get; }
         public MessageInfo[] Messages { get; }
 
-        public Message(Guid id, Guid from, Guid to, MessageInfo[] messages)
+        public Message(Guid id, Guid from, Guid to,MessageInfo[] messages)
         {
             Id = id;
            From = from;
-            To = to;    
+            To = to;
             Messages = messages;
         }
     }
