@@ -11,7 +11,8 @@ namespace Public_Chat.MongoDB.Entities
         public Guid Sender { get; set; }
 
         public string Text { get; set; }
-     
+        public DateTime Time { get; set; }
+
 
         public static MessageInfoEntity ToMessageInfoEntity(MessageInfo messageInfo)
         {
@@ -20,6 +21,7 @@ namespace Public_Chat.MongoDB.Entities
                 Id = messageInfo.Id,
                 Sender = messageInfo.Sender,
                 Text = messageInfo.Text,
+                Time = messageInfo.Time
 
             };
         }
@@ -28,7 +30,7 @@ namespace Public_Chat.MongoDB.Entities
           => messages.Select(p => ToMessageInfoEntity(p)).ToArray();
 
         public MessageInfo ToMessageinfo()
-            => new MessageInfo(this.Id, this.Sender, this.Text);
+            => new MessageInfo(this.Id, this.Sender, this.Text,this.Time);
 
     }
 }
