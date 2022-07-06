@@ -15,6 +15,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using Newtonsoft.Json.Serialization;
+using Prometheus;
 using Public_Chat.Hubs;
 using Public_Chat.Interfaces.Repositories;
 using Public_Chat.MongoDB.Common;
@@ -81,6 +82,7 @@ namespace Public_Chat
                 .AllowAnyHeader();
             });
             app.UseRouting();
+            app.UseHttpMetrics();
             app.UseAuthentication();
             app.UseAuthorization();
             
@@ -89,6 +91,7 @@ namespace Public_Chat
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<ChatHub>("/chatsocket");     // path will look like this https://localhost:44379/chatsocket 
+                endpoints.MapMetrics();
             });
 
             
