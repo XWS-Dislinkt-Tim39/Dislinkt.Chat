@@ -67,6 +67,7 @@ namespace Public_Chat
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseMetricServer();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
