@@ -1,0 +1,21 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcAddNotificationService";
+
+package addNewNotification;
+
+service addNotificationGreeter{
+	rpc addNotification (NotificationRequest) returns (NotificationReply);
+}
+
+message NotificationRequest{
+	string UserId=1;
+	string From=2;
+	string Type=3;
+	bool Seen=4;
+}
+
+message NotificationReply{
+	bool successful=1;
+	string message=2;
+}

@@ -39,6 +39,8 @@ namespace Public_Chat.MongoDB.Repositories
             return result?.ToMessage() ?? null;
         }
 
+   
+
         public async Task<Message> GetBySenderAndReciever(Guid from, Guid to)
         {
             var filter1 = Builders<MessageEntity>.Filter.Eq(u => u.From, from)
@@ -60,11 +62,6 @@ namespace Public_Chat.MongoDB.Repositories
             {
                 return r2;
             }
-
-
-
-            
-
             
         }
 
@@ -99,8 +96,7 @@ namespace Public_Chat.MongoDB.Repositories
             }
         }
 
-       
-
+      
         private MessageEntity ToMessageEntity(Message chat)
         {
             return new MessageEntity

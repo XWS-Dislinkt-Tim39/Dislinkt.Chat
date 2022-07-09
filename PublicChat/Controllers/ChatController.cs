@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Grpc.Net.Client;
+using GrpcAddNotificationService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -73,13 +76,29 @@ namespace Public_Chat.Controllers
         [Route("/add-new-message")]
         public async Task<bool> AddNewInterest(NewMessageData newMessage)
         {
-            var existingChat = await _messageRepository.GetById(newMessage.ChatId);
+            var existingChat = await _messageRepository.GetBySenderAndReciever(newMessage.To,newMessage.Sender);
 
             if (existingChat == null) return false;
 
             var updatedMessages = existingChat.Messages.Append(new Domain.MessageInfo(Guid.NewGuid(),newMessage.Sender,newMessage.Text,newMessage.Time)).ToArray();
 
             await _messageRepository.AddMessage(new Message(existingChat.Id, existingChat.From,existingChat.To, updatedMessages));
+
+
+            var channel = GrpcChannel.ForAddress("https://localhost:5002/");
+            var client = new addNotificationGreeter.addNotificationGreeterClient(channel);
+
+         
+                var reply = client.addNotification(new NotificationRequest { UserId = newMessage.To.ToString(), From = newMessage.Sender.ToString(), Type = "Message", Seen = false });
+
+                if (!reply.Successful)
+                {
+                    Debug.WriteLine("Doslo je do greske prilikom kreiranja notifikacija za usera");
+                    return false;
+                }
+
+                Debug.WriteLine("Uspesno prosledjen na registraciju u notifikacijama -- " + reply.Message);
+          
 
             return true;
 
