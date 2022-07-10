@@ -7,10 +7,10 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:3.1 AS build
 WORKDIR /src
-COPY ["PublicChat/PublicChat.csproj", "PublicChat/"]
-RUN dotnet restore "PublicChat/PublicChat.csproj"
+COPY ["./Dislinkt.Chat/PublicChat/PublicChat.csproj", "PublicChat/"]
+
 COPY . .
-WORKDIR "/src/PublicChat"
+WORKDIR "./Dislinkt.Chat/PublicChat"
 RUN dotnet build "PublicChat.csproj" -c Release -o /app/build
 
 FROM build AS publish
