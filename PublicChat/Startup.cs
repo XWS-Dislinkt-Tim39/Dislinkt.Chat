@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Jaeger;
+using Jaeger.Reporters;
+using Jaeger.Samplers;
+using Jaeger.Senders.Thrift;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -15,6 +19,8 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using Newtonsoft.Json.Serialization;
+using OpenTracing;
+using OpenTracing.Contrib.NetCore.Configuration;
 using Prometheus;
 using Public_Chat.Hubs;
 using Public_Chat.Interfaces.Repositories;
@@ -55,7 +61,26 @@ namespace Public_Chat
                 opt.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             }).AddJsonOptions(options =>
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter())); ;
+            services.AddOpenTracing();
+            // Adds the Jaeger Tracer.
+            services.AddSingleton<ITracer>(sp =>
+            {
+                var serviceName = sp.GetRequiredService<IWebHostEnvironment>().ApplicationName;
+                var loggerFactory = sp.GetRequiredService<ILoggerFactory>();
+                var reporter = new RemoteReporter.Builder().WithLoggerFactory(loggerFactory).WithSender(new UdpSender())
+                    .Build();
+                var tracer = new Tracer.Builder(serviceName)
+                    // The constant sampler reports every span.
+                    .WithSampler(new ConstSampler(true))
+                    // LoggingReporter prints every reported span to the logging framework.
+                    .WithReporter(reporter)
+                    .Build();
+                return tracer;
+            });
 
+            services.Configure<HttpHandlerDiagnosticOptions>(options =>
+                options.OperationNameResolver =
+                    request => $"{request.Method.Method}: {request?.RequestUri?.AbsoluteUri}");
             services.AddScoped<IDatabaseFactory, DatabaseFactory>();
             services.AddScoped<MongoDbContext>();
             services.AddScoped<IQueryExecutor, QueryExecutor>();
