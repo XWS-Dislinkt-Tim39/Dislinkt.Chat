@@ -28,24 +28,8 @@ namespace Public_Chat.Controllers
             _messageRepository = messageRepository;
         }
 
-       
-
-        /* [Route("send")]                                           //path looks like this: https://localhost:44379/api/chat/send
-         [HttpPost]
-         public IActionResult SendRequest([FromBody] MessageDto msg)
-         {
-             _hubContext.Clients.All.SendAsync("ReceiveOne", msg.User, msg.Text);
-             return Ok();
-         }*/
-
-        [Route("send")]                                           //path looks like this: https://localhost:44379/api/chat/send
-        [HttpPost]
-        public IActionResult SendRequest([FromBody] MessageDto msg)
-        {
-            
-            _hubContext.Clients.Group(msg.Reciever).SendAsync("Receive", msg.User, msg.Text);
-            return Ok();
-        }
+   
+     
 
         [HttpGet]
         [Route("/get-by-from-to")]
