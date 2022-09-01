@@ -33,7 +33,7 @@ namespace Public_Chat.Controllers
         }
 
 
-       
+
 
         /* [Route("send")]                                           //path looks like this: https://localhost:44379/api/chat/send
          [HttpPost]
@@ -42,6 +42,13 @@ namespace Public_Chat.Controllers
              _hubContext.Clients.All.SendAsync("ReceiveOne", msg.User, msg.Text);
              return Ok();
          }*/
+
+        [Route("")]
+        [HttpGet]
+        public string Index()
+        {
+            return "Hello from Chat/Controller";
+        }
 
         [Route("send")]                                           //path looks like this: https://localhost:44379/api/chat/send
         [HttpPost]
